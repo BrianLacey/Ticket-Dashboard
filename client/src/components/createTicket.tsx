@@ -1,4 +1,9 @@
-import { useState, useContext, type BaseSyntheticEvent } from "react";
+import {
+  useState,
+  useEffect,
+  useContext,
+  type BaseSyntheticEvent,
+} from "react";
 import {
   FormControl,
   FormHelperText,
@@ -44,6 +49,19 @@ export const CreateTicket = ({
   const [isValid, setIsValid] = useState(initialValid);
   // @ts-ignore
   const { alertProps, setAlertProps, fetchTickets } = useContext(AlertContext);
+
+  useEffect(() => {
+    if (createOpen) {
+      const e = {
+        target: {
+          name: "priority",
+          value: ticketData.priority,
+          type: "select",
+        },
+      };
+      handleValidation(e as BaseSyntheticEvent);
+    }
+  }, [ticketData.priority]);
 
   const handleInput = (e: BaseSyntheticEvent | SelectChangeEvent) => {
     const { name, value } = e.target;
@@ -119,7 +137,7 @@ export const CreateTicket = ({
   };
 
   return (
-    <Modal open={createOpen} /* onClose={onClose} */ className="relative">
+    <Modal open={createOpen} className="relative">
       <Card className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-100">
         <CardContent>
           <Grid container spacing={3}>
@@ -187,14 +205,6 @@ export const CreateTicket = ({
                 helperText={!isValid.email && "Please use valid emails only"}
               />
             </Grid>
-            {/* <FormControl fullWidth>
-              <InputLabel>Status</InputLabel>
-              <Select value={status} label="Status">
-              {statusList.map((item) => (
-                <MenuItem value={item}>{item}</MenuItem>
-                ))}
-                </Select>
-                </FormControl> */}
             <FormControl fullWidth required error={!isValid.priority}>
               <InputLabel>Priority</InputLabel>
               <Select
@@ -202,19 +212,6 @@ export const CreateTicket = ({
                 label="priority"
                 name="priority"
                 onChange={handleInput}
-                onClose={(e) => {
-                  const { innerText } = e.target as HTMLElement;
-                  const next = {
-                    ...e,
-                    target: {
-                      ...e.target,
-                      name: "priority",
-                      value: innerText,
-                      type: "select",
-                    },
-                  };
-                  return handleValidation(next);
-                }}
               >
                 {priorityList.map((item) => (
                   <MenuItem value={item}>{item}</MenuItem>

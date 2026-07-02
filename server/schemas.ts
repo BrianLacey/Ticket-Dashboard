@@ -10,3 +10,7 @@ export const ticketSchema = object({
   priority: mixed().oneOf(Object.values(ePriority)).required(),
   created: date().required(),
 });
+
+export const statusSchema = object({
+  status: mixed().oneOf(Object.values(eStatus)).required(),
+});

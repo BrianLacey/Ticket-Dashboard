@@ -22,5 +22,9 @@ export type TAlertProps = {
 export interface IAlertContext {
   alertProps: TAlertProps;
   setAlertProps: React.Dispatch<React.SetStateAction<TAlertProps>>;
+}
+
+export interface ITicketDataContext {
+  ticketList: ITicket[];
   fetchTickets: () => Promise<void>;
 }

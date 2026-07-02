@@ -13,12 +13,19 @@ export const createTickets = async (ticket: ITicket) => {
   }
 };
 
-export const updateTicket = async (updatedStatus: eStatus) => {
-  const response = await fetch("http://localhost:3001/api/tickets", {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(updatedStatus),
-  });
+export const updateTicket = async (updateData: {
+  ticketId: string;
+  localStatus: eStatus;
+}) => {
+  const { ticketId, localStatus } = updateData;
+  const response = await fetch(
+    `http://localhost:3001/api/tickets/${ticketId}`,
+    {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: localStatus }),
+    },
+  );
   if (!response.ok) {
     throw await response.json();
   } else {
