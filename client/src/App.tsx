@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, type BaseSyntheticEvent } from "react";
 import {
   Container,
   Button,
@@ -6,17 +6,21 @@ import {
   AppBar,
   Toolbar,
   Typography,
-  Box,
-  Grid,
   Stack,
   CircularProgress,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  ListSubheader,
+  type SelectChangeEvent,
 } from "@mui/material";
 import { PageContent } from "./containers/PageContent";
 import { CreateTicket } from "./components/createTicket";
 import { readTickets } from "./services/ticketServices";
 import { PopAlert } from "./components/popAlert";
 import { AlertContext, TicketDataContext } from "./contexts";
-import type { ITicket, TAlertProps } from "./types";
+import type { ITicket, TAlertProps, eStatus, ePriority } from "./types";
 
 const App = () => {
   const initialAlert: TAlertProps = {
@@ -28,12 +32,12 @@ const App = () => {
   const [createOpen, setCreateOpen] = useState(false);
   const [alertProps, setAlertProps] = useState(initialAlert);
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState<eStatus | ePriority | "">("");
 
   const fetchTickets = async () => {
     try {
       const tickets = await readTickets();
       setTicketList(tickets);
-      console.log(tickets.length);
       setLoading(false);
     } catch (err) {
       console.error("Error", err);
@@ -60,6 +64,10 @@ const App = () => {
   };
   const handleClose = () => {
     setCreateOpen(false);
+  };
+  const handleFilter = (e: SelectChangeEvent) => {
+    const value = e.target.value as eStatus | ePriority | "";
+    setFilter(value);
   };
 
   return (
@@ -93,9 +101,51 @@ const App = () => {
                 >
                   Create
                 </Button>
+                <FormControl
+                  fullWidth
+                  className="px-2! mt-2! [&_.MuiInputLabel-root]:text-white!   [&_.MuiOutlinedInput-root]:text-white! [&_.MuiOutlinedInput-notchedOutline]:border-white! [&_.MuiSelect-icon]:text-white!"
+                >
+                  <InputLabel className="pl-2.5!">Filter</InputLabel>
+                  <Select
+                    value={filter}
+                    label="filter"
+                    name="filter"
+                    onChange={handleFilter}
+                    className="px-2!"
+                  >
+                    <ListSubheader>Status</ListSubheader>
+                    <MenuItem value="Open">Open</MenuItem>
+                    <MenuItem value="In Progress">In Progress</MenuItem>
+                    <MenuItem value="Resolved">Resolved</MenuItem>
+                    <ListSubheader>Priority</ListSubheader>
+                    <MenuItem value="Low">Low</MenuItem>
+                    <MenuItem value="Medium">Medium</MenuItem>
+                    <MenuItem value="High">High</MenuItem>
+                  </Select>
+                </FormControl>
+                <Button
+                  className="text-white! pt-4!"
+                  onClick={(e) => {
+                    type ExpectedFilterEvent =
+                      React.ChangeEvent<HTMLInputElement> & {
+                        target: { value: string; name: string };
+                      };
+                    handleFilter({
+                      ...e,
+                      target: {
+                        ...e.target,
+                        value: "",
+                        name:
+                          (e.target as HTMLElement).getAttribute("name") || "",
+                      },
+                    } as unknown as ExpectedFilterEvent);
+                  }}
+                >
+                  Clear Filter
+                </Button>
               </Drawer>
               <Stack className="min-h-screen pl-38 py-6">
-                <PageContent ticketList={ticketList} />
+                <PageContent ticketList={ticketList} filter={filter} />
               </Stack>
               <Stack className="fixed bottom-0 left-4 right-4 z-10000">
                 <PopAlert />
