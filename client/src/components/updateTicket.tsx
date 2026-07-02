@@ -1,6 +1,7 @@
 import {
   useState,
   useEffect,
+  useMemo,
   useContext,
   type BaseSyntheticEvent,
 } from "react";
@@ -20,10 +21,10 @@ import {
   Divider,
 } from "@mui/material";
 import type { SelectChangeEvent } from "@mui/material";
-import type { eStatus } from "../types";
+import type { eStatus, ITicket } from "../types";
 import { statusList } from "../constants";
 import { updateTicket } from "../services/ticketServices";
-import { AlertContext } from "../contexts";
+import { AlertContext, TicketDataContext } from "../contexts";
 
 export const UpdateTicket = ({
   updateOpen = false,
@@ -34,48 +35,61 @@ export const UpdateTicket = ({
   onClose: () => void;
   ticketId: string;
 }) => {
-  const initialValid = {
-    localStatus: true,
-  };
   const [localStatus, setLocalStatus] = useState("");
-  const [isValid, setIsValid] = useState(initialValid);
+  const [isValid, setIsValid] = useState(true);
   // @ts-ignore
-  const { alertProps, setAlertProps, fetchTickets } = useContext(AlertContext);
+  const { alertProps, setAlertProps } = useContext(AlertContext);
+  // @ts-ignore
+  const { ticketList, fetchTickets } = useContext(TicketDataContext);
+  const currentTicket: ITicket = useMemo(() => {
+    if (updateOpen) {
+      return ticketList.find((ticket: ITicket) => ticket.id === ticketId);
+    } else {
+      return {
+        title: "",
+        description: "",
+        name: "",
+        email: "",
+        status: "",
+        priority: "",
+      };
+    }
+  }, [updateOpen]);
 
-  const handleInput = (e: BaseSyntheticEvent | SelectChangeEvent) => {
-    const { name, value } = e.target;
+  useEffect(() => {
+    if (currentTicket) {
+      setLocalStatus(currentTicket.status);
+    }
+  }, [currentTicket]);
+  useEffect(() => {
+    handleValidation(localStatus as eStatus);
+  }, [localStatus]);
+
+  const handleInput = (e: SelectChangeEvent) => {
+    const { value } = e.target;
+    if (!value) return;
     setLocalStatus(value);
   };
-  const handleValidation = (e: BaseSyntheticEvent | SelectChangeEvent) => {
-    const { name, value, type } = e.target;
-    if (!value) {
-      setIsValid((prevData) => ({ ...prevData, [name]: false }));
+  const handleValidation = (nextStatus: eStatus) => {
+    if (!nextStatus) {
+      setIsValid(false);
       return;
     }
-    let result = null;
-    switch (type) {
-      case "select":
-        if (!isValid.localStatus && value) {
-          setIsValid((prevData) => ({ ...prevData, [name]: true }));
-        }
-        return;
-    }
-    if (result && result === isValid[name as keyof typeof isValid]) {
-      return;
-    }
-    if (result) {
-      setIsValid((prevData) => ({ ...prevData, [name]: true }));
-    } else {
-      setIsValid((prevData) => ({ ...prevData, [name]: false }));
+    if (!isValid && nextStatus) {
+      setIsValid(true);
     }
   };
   const handleInitialize = () => {
-    setIsValid(initialValid);
+    setLocalStatus("");
+    setIsValid(true);
     onClose();
   };
   const handleSubmit = async () => {
     try {
-      const result = await updateTicket(localStatus as eStatus);
+      const result = await updateTicket({
+        ticketId,
+        localStatus: localStatus as eStatus,
+      });
       console.log("Success", result);
       // @ts-ignore
       setAlertProps((prevData) => ({
@@ -83,7 +97,7 @@ export const UpdateTicket = ({
         ...{
           type: "success",
           isOpen: true,
-          message: "Ticket successfully added!",
+          message: "Ticket successfully updated!",
         },
       }));
       fetchTickets();
@@ -96,63 +110,62 @@ export const UpdateTicket = ({
         ...{
           type: "error",
           isOpen: true,
-          message: "Please check the form fields you entered and try again.",
+          message: "Please check the selection and try again.",
         },
       }));
     }
   };
 
   return (
-    <Modal open={updateOpen} /* onClose={onClose} */ className="relative">
-      <Card className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-100">
+    <Modal open={updateOpen} className="relative">
+      <Card className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150">
         <CardContent>
           <Grid container spacing={3}>
             <Grid size={12}>
-              <Typography>Title</Typography>
+              <Typography>Title:</Typography>
+              <Typography>{currentTicket.title}</Typography>
+              <Divider className="py-0.5" />
             </Grid>
             <Grid size={12}>
-              <Typography>Description</Typography>
+              <Typography>Description:</Typography>
+              <Typography>{currentTicket.description}</Typography>
+              <Divider className="py-0.5" />
             </Grid>
             <Grid size={6}>
-              <Typography>Name</Typography>
+              <Typography>Name:</Typography>
+              <Typography>{currentTicket.name}</Typography>
+              <Divider className="py-0.5" />
             </Grid>
             <Grid size={6}>
-              <Typography>Email</Typography>
+              <Typography>Email:</Typography>
+              <Typography>{currentTicket.email}</Typography>
+              <Divider className="py-0.5" />
             </Grid>
-            {/* <FormControl fullWidth>
+            <Grid size={6}>
+              <Typography>Created:</Typography>
+              <Typography>
+                {new Date(currentTicket.created).toLocaleString()}
+              </Typography>
+              <Divider className="py-0.5" />
+            </Grid>
+            <Grid size={6}>
+              <Typography>Priority:</Typography>
+              <Typography>{currentTicket.priority}</Typography>
+              <Divider className="py-0.5" />
+            </Grid>
+            <FormControl fullWidth required error={!isValid}>
               <InputLabel>Status</InputLabel>
-              <Select value={status} label="Status">
-              {statusList.map((item) => (
-                <MenuItem value={item}>{item}</MenuItem>
-                ))}
-                </Select>
-                </FormControl> */}
-            <FormControl fullWidth required error={!isValid.localStatus}>
-              <InputLabel>Priority</InputLabel>
               <Select
                 value={localStatus}
                 label="status"
-                name="priority"
+                name="status"
                 onChange={handleInput}
-                onClose={(e) => {
-                  const { innerText } = e.target as HTMLElement;
-                  const next = {
-                    ...e,
-                    target: {
-                      ...e.target,
-                      name: "priority",
-                      value: innerText,
-                      type: "select",
-                    },
-                  };
-                  return handleValidation(next);
-                }}
               >
                 {statusList.map((item) => (
                   <MenuItem value={item}>{item}</MenuItem>
                 ))}
               </Select>
-              {!isValid.localStatus && (
+              {!isValid && (
                 <FormHelperText>Please make a selection</FormHelperText>
               )}
             </FormControl>
@@ -162,7 +175,7 @@ export const UpdateTicket = ({
           <Button
             color="primary"
             variant="contained"
-            disabled={!localStatus}
+            disabled={!isValid || localStatus === currentTicket.status}
             onClick={handleSubmit}
           >
             Submit

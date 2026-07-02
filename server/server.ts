@@ -9,6 +9,8 @@ const app = express();
 const port = 3001;
 const corsOptions = {
   origin: ["http://localhost:5173"],
+  methods:['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
 const connect = async () => {
@@ -17,8 +19,9 @@ const connect = async () => {
 
 connect();
 
-app.use(express.json());
 app.use(cors(corsOptions));
+app.use(express.json());
+app.options('*all', cors());
 app.use("/api", router);
 app.all("/*splat", (req: Request, res: Response, next: NextFunction) => {
   let error: IError;
