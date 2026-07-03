@@ -12,9 +12,6 @@
     "target": "esnext",
     "types": [],
     "esModuleInterop": true,
-    "paths": {
-      "*": ["./node_modules/*", "./src/*"]
-    },
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],
