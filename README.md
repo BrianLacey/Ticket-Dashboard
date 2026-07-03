@@ -16,7 +16,7 @@ yup for API schema validation.
 concurrently, dotenv, and tsx as dev dependencies for running the app locally and conveiently through the devleopment process.
 
 For instructions on Front End setup to run locally, please see the README under/client, or click [here](https://github.com/BrianLacey/Ticket-Dashboard/tree/main/client#readme).
-For instructions on Back End setup to run locally, please see the README under/server or click [here]().
+For instructions on Back End setup to run locally, please see the README under/server or click [here](https://github.com/BrianLacey/Ticket-Dashboard/blob/main/server/README.md).
 
 Deployed using Vercel for the Front End, Render for the Back End, and Atlas for the database.
 See https://ticket-dashboard-sage.vercel.app to view the deployed, functional version.
