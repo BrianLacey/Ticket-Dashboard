@@ -3,7 +3,7 @@
   "compilerOptions": {
     // File Layout
     // "rootDir": "./",
-    // "outDir": "./dist",
+    "outDir": "./dist",
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
@@ -28,8 +28,9 @@
     // Stricter Typechecking Options
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
-    "allowImportingTsExtensions": true,
-    "noEmit": true,
+    // "allowImportingTsExtensions": true,
+    "noEmit": false,
+    "rewriteRelativeImportExtensions": true,
 
     // Style Options
     // "noImplicitReturns": true,
@@ -47,5 +48,8 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true
-  }
+  },
+  "include": [
+    "**/*"
+  ]
 }
