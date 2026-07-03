@@ -3,7 +3,6 @@ import {
   useEffect,
   useMemo,
   useContext,
-  type BaseSyntheticEvent,
 } from "react";
 import {
   FormControl,

@@ -1,7 +1,8 @@
 import type { ITicket, eStatus } from "../types";
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export const createTickets = async (ticket: ITicket) => {
-  const response = await fetch("http://localhost:3001/api/tickets", {
+  const response = await fetch(`${BASE_URL}/api/tickets`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(ticket),
@@ -19,7 +20,7 @@ export const updateTicket = async (updateData: {
 }) => {
   const { ticketId, localStatus } = updateData;
   const response = await fetch(
-    `http://localhost:3001/api/tickets/${ticketId}`,
+    `${BASE_URL}/api/tickets/${ticketId}`,
     {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -34,7 +35,7 @@ export const updateTicket = async (updateData: {
 };
 
 export const readTickets = async () => {
-  const response = await fetch("http://localhost:3001/api/tickets", {
+  const response = await fetch(`${BASE_URL}/api/tickets`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });

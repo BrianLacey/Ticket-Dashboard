@@ -3,7 +3,7 @@ import { Db, MongoClient } from "mongodb";
 let _db: Db;
 
 export const connectDb = async () => {
-  const client = new MongoClient("mongodb://localhost:27017");
+  const client = new MongoClient(`${process.env.DATABASE}`);
   try {
     await client.connect();
     const database = await client.db("ticket_db");
