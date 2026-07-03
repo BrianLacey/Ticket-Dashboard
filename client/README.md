@@ -1,75 +1,45 @@
-# React + TypeScript + Vite
+1. Install Node.js
+This app was built on NodeJS version 24.14.0, though I imagine the current Long Term Support (LTS) version 24.18.0 (as of this writing) should not cause any issues. NodeJS can be installed [here](https://nodejs.org/en/download) at nodejs.org, its official webpage.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+    Run `node --version` and `npm --version` to confirm both are installed.
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+2. Install Git  
+The version used in this app is 2.42.0 but the current version (2.55.0 as of this writing) should be fine as well. Git's official downlaod page is [here](https://git-scm.com/install).
+Default setings during istallation are fine.
 
-## React Compiler
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+3. Clone and enter the client folder  
+Inside your IDE of choice (this weas built with VSCode), run the command:
 
-## Expanding the ESLint configuration
+    `git clone https://github.com/BrianLacey/Ticket-Dashboard.git`
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+    in your terminal to clone the entire repo onto your system, followed by:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+    `cd Ticket-Dashboard/client`
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+    to access code in the Front End of the app.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 
-```
+4. Install dependencies  
+Run the command:
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+    `npm install`
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+    This pulls in React, MUI, Tailwind, TypeScript, ESLint, etc. Everything listed in package.json.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 
-```
+5. Create a .env file  
+Inside the the client folder create a new file titled .env. Within this, enter the following local environment variables:
+
+    `VITE_BASE_URL=http://localhost:3001`
+
+   This will ensure the Front End will find the correct API to communicate with.
+
+
+7. Run the dev server  
+Use the command:
+
+    `npm run dev`
+   
+    This will start the app. If everything is installed correctly there should be a clickable localhost URL which will take you to the UI.
