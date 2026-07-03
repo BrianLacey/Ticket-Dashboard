@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx tsx",
-    "dev": "concurrently \"npx tsx\" \"node --watch --inspect server.ts\""
+    "dev": "concurrently \"npx tsx\" \"node --watch --inspect server.ts\"",
+    "prod": "concurrently \"npx tsx\" \"node server.ts\""
   },
   "keywords": [],
   "author": "",
@@ -14,6 +15,7 @@
   "type": "module",
   "dependencies": {
     "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "mongodb": "^7.4.0",
     "yup": "^1.7.1"

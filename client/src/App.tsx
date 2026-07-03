@@ -1,4 +1,4 @@
-import { useState, useEffect, type BaseSyntheticEvent } from "react";
+import { useState, useEffect } from "react";
 import {
   Container,
   Button,

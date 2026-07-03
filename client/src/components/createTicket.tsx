@@ -22,7 +22,7 @@ import type { SelectChangeEvent } from "@mui/material";
 import type { ITicket } from "../types";
 import { priorityList, textRegex, emailRegex } from "../constants";
 import { createTickets } from "../services/ticketServices";
-import { AlertContext } from "../contexts";
+import { AlertContext, TicketDataContext } from "../contexts";
 
 export const CreateTicket = ({
   createOpen = false,
@@ -48,7 +48,9 @@ export const CreateTicket = ({
   const [ticketData, setTicketData] = useState(initialTicket);
   const [isValid, setIsValid] = useState(initialValid);
   // @ts-ignore
-  const { alertProps, setAlertProps, fetchTickets } = useContext(AlertContext);
+  const { alertProps, setAlertProps } = useContext(AlertContext);
+    // @ts-ignore
+    const { fetchTickets } = useContext(TicketDataContext);
 
   useEffect(() => {
     if (createOpen) {
