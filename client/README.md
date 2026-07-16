@@ -37,7 +37,7 @@ Inside the the client folder create a new file titled .env. Within this, enter t
    This will ensure the Front End will find the correct API to communicate with.
 
 
-7. Run the dev server  
+6. Run the dev server  
 Use the command:
 
     `npm run dev`
